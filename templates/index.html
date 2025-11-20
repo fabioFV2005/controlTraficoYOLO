@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Análisis de Tráfico - Cochabamba</title>
+    <link rel="stylesheet" href="/static/css/styles.css">
+    <link href='https://api.mapbox.com/mapbox-gl-js/v2.15.0/mapbox-gl.css' rel='stylesheet' />
+    <script src='https://api.mapbox.com/mapbox-gl-js/v2.15.0/mapbox-gl.js'></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Sistema de Análisis de Tráfico Vehicular</h1>
+            <p class="subtitle">Análisis en tiempo real con IA | Cochabamba, Bolivia</p>
+        </header>
+
+        <div class="grid">
+            <div class="card full-width">
+                <div class="card-header">
+                    <div>
+                        <h2>Mapa de Calor - Densidad de Tráfico por Ubicación y Día</h2>
+                        <p class="map-description">Visualiza la concentración de vehículos en diferentes zonas de Cochabamba según el día de la semana</p>
+                    </div>
+                    <div class="map-controls">
+                        <div class="day-filter">
+                            <label>Filtrar por día:</label>
+                            <select id="dayFilter" class="day-select">
+                                <option value="all">Todos los días</option>
+                                <option value="0">Lunes</option>
+                                <option value="1">Martes</option>
+                                <option value="2">Miércoles</option>
+                                <option value="3">Jueves</option>
+                                <option value="4">Viernes</option>
+                                <option value="5">Sábado</option>
+                                <option value="6">Domingo</option>
+                            </select>
+                        </div>
+                        <div class="map-legend">
+                            <span class="legend-item"><span class="color-box" style="background: blue"></span> Bajo</span>
+                            <span class="legend-item"><span class="color-box" style="background: cyan"></span> Medio</span>
+                            <span class="legend-item"><span class="color-box" style="background: yellow"></span> Alto</span>
+                            <span class="legend-item"><span class="color-box" style="background: red"></span> Muy Alto</span>
+                        </div>
+                    </div>
+                </div>
+                <div id="map"></div>
+                <div class="location-info">
+                    <span id="coords">Haz clic en el mapa para seleccionar ubicación del análisis</span>
+                    <span id="mapStats" class="map-stats"></span>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>Cargar Video</h2>
+                <div class="upload-area" id="uploadArea">
+                    <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12"/>
+                    </svg>
+                    <p>Arrastra tu video aquí o haz clic para seleccionar</p>
+                    <input type="file" id="videoInput" accept="video/*" hidden>
+                </div>
+                <button id="analyzeBtn" class="btn-primary" disabled>Analizar Video</button>
+                <div id="uploadStatus"></div>
+            </div>
+
+            <div class="card full-width">
+                <div class="card-header">
+                    <div>
+                        <h2>Análisis de Tráfico por Día de la Semana</h2>
+                        <p class="chart-description">Compara el volumen de vehículos detectados en cada día. Los días laborables típicamente muestran mayor tráfico.</p>
+                    </div>
+                    <div class="filters">
+                        <input type="date" id="startDate" class="date-input" placeholder="Fecha inicio">
+                        <input type="date" id="endDate" class="date-input" placeholder="Fecha fin">
+                        <button id="filterBtn" class="btn-secondary">Filtrar</button>
+                        <button id="resetBtn" class="btn-secondary">Reset</button>
+                    </div>
+                </div>
+                <canvas id="weekChart"></canvas>
+            </div>
+
+            <div class="card full-width">
+                <div class="card-header">
+                    <div>
+                        <h2>Distribución de Tráfico por Hora del Día</h2>
+                        <p class="chart-description">Identifica las horas pico de tráfico. Las horas de entrada (7-9am) y salida (5-7pm) suelen tener mayor volumen.</p>
+                    </div>
+                    <div class="hour-filter">
+                        <label>Vista:</label>
+                        <select id="hourViewType" class="day-select">
+                            <option value="line">Línea de Tiempo</option>
+                            <option value="bar">Barras Comparativas</option>
+                        </select>
+                    </div>
+                </div>
+                <canvas id="hourChart"></canvas>
+            </div>
+
+            <div class="card">
+                <h2>Estadísticas Generales</h2>
+                <div class="stats-grid">
+                    <div class="stat-item">
+                        <span class="stat-value" id="totalCars">0</span>
+                        <span class="stat-label">Total Autos</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-value" id="avgConfidence">0%</span>
+                        <span class="stat-label">Confianza Promedio</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-value" id="peakDay">-</span>
+                        <span class="stat-label">Día con Más Tráfico</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-value" id="peakHour">-</span>
+                        <span class="stat-label">Hora Pico</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="loadingModal" class="modal">
+        <div class="modal-content">
+            <div class="loader"></div>
+            <p>Procesando video con YOLO...</p>
+        </div>
+    </div>
+
+    <script src="/static/js/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,45 @@
+# Python caches and compiled files
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.cache/
+
+# Virtual environments
+.venv/
+venv/
+ENV/
+env/
+
+# Uploads and user-generated media (do NOT commit uploads)
+/uploads/
+uploads/
+
+# Environment files (may contain secrets)
+.env
+.env.*
+
+# IDE/editor folders
+.vscode/
+.idea/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Model weights and large ML artifacts (they can be re-downloaded)
+*.pt
+*.pth
+weights/
+models/
+
+# Build and distribution
+build/
+dist/
+*.egg-info/
+
+# Logs and temporary files
+*.log
+*.tmp
+*.bak
+*.video_procesado_con_detecciones.mp4
